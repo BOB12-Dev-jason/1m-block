@@ -89,9 +89,9 @@ static u_int32_t print_pkt (struct nfq_data *tb)
                 hoststart = strstr((char *)data + 40, niddle);
                 if(hoststart != NULL) {
                 	hoststart += strlen(niddle);
-                	printf("hoststart: %s\n", hoststart);
+                	// printf("hoststart: %s\n", hoststart);
                 	hostend = strstr(hoststart, "\r\n");
-                	printf("hostend: %s\n", hostend);
+                	// printf("hostend: %s\n", hostend);
                 	
                 	hostLength = hostend - hoststart;
                 	
@@ -102,8 +102,11 @@ static u_int32_t print_pkt (struct nfq_data *tb)
                 	printf("find host: %s\n", host);
 
                         hostname = host;
+                        
                 }
-
+                hoststart = NULL;
+                hostend = NULL;
+                
                 
                 
         }
@@ -124,11 +127,15 @@ static int cb(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
         auto it = sites.find(hostname);
         
         if(it != sites.end()) { // 목록에 있으면 차단
+        	hostname = "";
                 return nfq_set_verdict(qh, id, NF_DROP, 0, NULL);
         }
         else { // 목록에 없으면 통과
+        	hostname = "";
                 return nfq_set_verdict(qh, id, NF_ACCEPT, 0, NULL);
         }
+        
+        
 
         printf("entering callback\n");
 
@@ -162,18 +169,6 @@ int main(int argc, char **argv)
                 }
         }
         cout<<sites.size()<<endl;
-
-        string tmp("google.com");
-	auto it = sites.find(tmp);
-        if(it != sites.end()) {
-                cout<<tmp<<" 찾음"<<endl;
-        }
-        
-        
-        //for (string site : sites) 
-              // cout<<site<<endl;
-                
-        // cout << endl;
         
         struct nfq_handle *h;
         struct nfq_q_handle *qh;
