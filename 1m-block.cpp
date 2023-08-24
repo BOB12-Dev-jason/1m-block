@@ -143,7 +143,7 @@ static int cb(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
 
 void usage() {
         puts("usage: 1m-block <site list file>");
-        puts("example: 1m-block top-1m.txt");
+        puts("example: 1m-block top-1m.csv");
 }
 
 int main(int argc, char **argv)
